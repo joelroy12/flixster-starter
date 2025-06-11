@@ -1,0 +1,8 @@
+.movie-list {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    row-gap: 100px;
+}

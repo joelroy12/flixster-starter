@@ -1,0 +1,11 @@
+.movie-card {
+    width: 200px;
+    height: 250px;
+    border: 1px solid blue;
+}
+
+.poster {
+    width: 200px;
+    height: 200px;
+    border: 1px solid red;
+};
