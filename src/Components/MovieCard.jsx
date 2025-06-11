@@ -9,7 +9,7 @@ function MovieCard({ movie, openModal, setOpenModal }) {
         className="poster"
         src={`https://image.tmdb.org/t/p/original/${poster_path}`}></img>
       <h2>{title}</h2>
-      <p>{vote_average}</p>
+      <p>{vote_average.toFixed(2)}/10</p>
     </div>
   );
 }

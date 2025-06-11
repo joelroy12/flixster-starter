@@ -6,7 +6,6 @@ import MovieModal from "./Components/MovieModal";
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [filteredMovies, setFilteredMovies] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -55,6 +54,11 @@ function App() {
     }
   };
 
+  const fetchGenres = async () => {
+    const apiKey = import.meta.env.VITE_API_KEY;
+    const genreURL = `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=28`;
+  };
+
   // A hook used to call fetchMovies when "page" changes
   useEffect(() => {
     fetchMovies();
@@ -67,9 +71,9 @@ function App() {
 
   // Handler for search inputs
   const searchMoviesHandler = (event) => {
-    const search = event.target.value.toLowerCase();
-    setSearchQuery(search);
-    setSearchInput(search);
+    event.preventDefault();
+    // const search = event.target[0].value.toLowerCase();
+    // setSearchInput(search);
     searchMovies();
   };
 
@@ -79,28 +83,28 @@ function App() {
   //   return movie.title.toLowerCase().includes(searchInput.toLowerCase());
   // });
 
-
-  // const searchedMovies = searchMovies(searchInput);
-
-  // Needed to render the movies
-  // const renderMovies = () => {
-  //   console.log("hello");
-  //   if (showMovies) return <MovieList movies={filteredMovies} />;
-  //   else return null;
-  // };
-
   return (
     <div className="App">
       {openModal && (
         <MovieModal openModal={openModal} setOpenModal={setOpenModal} />
       )}
-      <input
-        type="search"
-        placeholder="Search Movies"
-        onChange={searchMoviesHandler}
-        value={searchInput}
-      />
-      <button onClick={() => console.log("test")}>Submit</button>
+      <form onSubmit={searchMoviesHandler}>
+        <input
+          type="search"
+          placeholder="Search Movies"
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)}
+        />
+        <button type="submit">Submit</button>
+        <button
+          type="button"
+          onClick={() => {
+            setSearchInput("");
+            setFilteredMovies(null);
+          }}>
+          Clear
+        </button>
+      </form>
       <MovieList
         movies={filteredMovies ? filteredMovies : movies}
         openModal={openModal}

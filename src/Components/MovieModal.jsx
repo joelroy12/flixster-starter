@@ -1,18 +1,28 @@
 import React, { useEffect } from "react";
 import "./MovieModal.css";
 
-const MovieModal = ({ setOpenModal, title, poster_path, release_date, overview, genre, video }) => {
-
+const MovieModal = ({
+  setOpenModal,
+  title,
+  poster_path,
+  release_date,
+  overview,
+  genre,
+  video,
+  movie_id,
+}) => {
   useEffect(() => {
     const options = {
       method: "GET",
       headers: {
         accept: "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNjMyZTczM2M4Zjg2ZjYxYTEwMGZmODQ4YzhlZGUzMiIsIm5iZiI6MTc0OTUwNDMzMi40MTQsInN1YiI6IjY4NDc1MTRjYTVmNmI1YzlhYjI5MzFlMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.HSYe3uAfLYyTOOhpjNuLJo4euBpF4dQI1Br78ejiQbA",
       },
     };
 
     fetch(
-      "https://api.themoviedb.org/3/movie/movie_id/videos?language=en-US",
+      `https://api.themoviedb.org/3/movie/${movie_id}/videos?language=en-US`,
       options
     )
       .then((res) => res.json())
