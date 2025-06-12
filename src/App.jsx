@@ -3,14 +3,16 @@ import React from "react";
 import "./App.css";
 import MovieList from "./Components/MovieList";
 import MovieModal from "./Components/MovieModal";
+import MovieCard from "./Components/MovieCard";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [movie, setMovie] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [page, setPage] = useState(1);
-  const [data, setData] = useState([]);
+  const [sort, setSort] = useState("");
 
   // Fetch movies from API
   const fetchMovies = async () => {
@@ -54,10 +56,19 @@ function App() {
     }
   };
 
-  const fetchGenres = async () => {
-    const apiKey = import.meta.env.VITE_API_KEY;
-    const genreURL = `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=28`;
-  };
+  //  const fetchGenres = async () => {
+  //   const apiKey = import.meta.env.VITE_API_KEY;
+  //   const genreURL = `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=28`;
+
+  //   try {
+  //     const response = await fetch(searchURL, {
+  //       method: "GET",
+  //       headers: {
+  //         accept: "application/json",
+  //       },
+  //     });
+
+  // };
 
   // A hook used to call fetchMovies when "page" changes
   useEffect(() => {
@@ -86,7 +97,11 @@ function App() {
   return (
     <div className="App">
       {openModal && (
-        <MovieModal openModal={openModal} setOpenModal={setOpenModal} />
+        <MovieModal
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          movie={movie}
+        />
       )}
       <form onSubmit={searchMoviesHandler}>
         <input
@@ -109,6 +124,7 @@ function App() {
         movies={filteredMovies ? filteredMovies : movies}
         openModal={openModal}
         setOpenModal={setOpenModal}
+        setMovie={setMovie}
       />
       <button onClick={loadMore}>Load More</button>
     </div>

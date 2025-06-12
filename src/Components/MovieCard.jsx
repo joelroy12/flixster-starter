@@ -1,10 +1,16 @@
 import "../Components/Card.css";
 import "./MovieCard.css";
 
-function MovieCard({ movie, openModal, setOpenModal }) {
+function MovieCard({ movie, openModal, setOpenModal, setMovie }) {
   const { title, poster_path, vote_average } = movie;
+//   console.log(movie);
   return (
-    <div className="movie-card" onClick={() => setOpenModal(true)}>
+    <div
+      className="movie-card"
+      onClick={() => {
+        setOpenModal(true);
+        setMovie(movie);
+      }}>
       <img
         className="poster"
         src={`https://image.tmdb.org/t/p/original/${poster_path}`}></img>
