@@ -30,6 +30,11 @@ const MovieModal = (movie) => {
     (video) => video.type === "Trailer" && video.site === "YouTube"
   );
 
+  closeButton.addEventListener("click", () => {
+    modal.style.display = "none";
+    document.getElementById("songs-list").innerHTML = "";
+  });
+
   return (
     <div className="outer-shadow">
       <div className="modal">

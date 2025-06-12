@@ -2,6 +2,8 @@ import MovieCard from "./MovieCard";
 import "./MovieList.css";
 
 function MovieList({ movies, openModal, setOpenModal, setMovie }) {
+  console.log(movies);
+
   if (!movies || movies.length === 0) {
     return <p>NO MOVIES FOUND</p>;
   }
