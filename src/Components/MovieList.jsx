@@ -1,7 +1,16 @@
 import MovieCard from "./MovieCard";
 import "./MovieList.css";
 
-function MovieList({ movies, openModal, setOpenModal, setMovie }) {
+function MovieList({
+  movies,
+  openModal,
+  setOpenModal,
+  setMovie,
+  favorites,
+  toggleFavorite,
+  watched,
+  toggleWatched,
+}) {
   console.log(movies);
 
   if (!movies || movies.length === 0) {
@@ -16,6 +25,10 @@ function MovieList({ movies, openModal, setOpenModal, setMovie }) {
           setMovie={setMovie}
           key={`${movie.id}`}
           movie={movie}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
+          watched={watched}
+          toggleWatched={toggleWatched}
         />
       ))}
     </div>

@@ -4,15 +4,21 @@ import "./App.css";
 import MovieList from "./Components/MovieList";
 import MovieModal from "./Components/MovieModal";
 import MovieCard from "./Components/MovieCard";
+import Header from "./Components/Header";
+import Banner from "./Components/Banner";
+import Footer from "./Components/Footer";
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [movie, setMovie] = useState([]);
+  const [genres, setGenres] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [page, setPage] = useState(1);
   const [sortAscending, setSortAscending] = useState(true);
+  const [favorites, setFavorites] = useState([]);
+  const [watched, setWatched] = useState([]);
 
   // Fetch movies from API
   const fetchMovies = async () => {
@@ -29,7 +35,7 @@ function App() {
       });
 
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       if (data.page === 1) {
         setMovies(data.results);
       } else {
@@ -41,7 +47,7 @@ function App() {
   };
 
   const searchMovies = async () => {
-    console.log(movies);
+    //console.log(movies);
     const apikey = import.meta.env.VITE_API_KEY;
     const searchURL = `https://api.themoviedb.org/3/search/movie?api_key=${apikey}&query=${searchInput}`;
 
@@ -54,27 +60,7 @@ function App() {
       });
 
       const data = await response.json();
-      console.log(data.results);
-      setFilteredMovies(data.results || []);
-    } catch (error) {
-      console.log("Ran into an error: ", error);
-    }
-  };
-
-  const fetchGenres = async () => {
-    const apiKey = import.meta.env.VITE_API_KEY;
-    const genreURL = `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=28`;
-
-    try {
-      const response = await fetch(searchURL, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-        },
-      });
-
-      const data = await response.json();
-      console.log(data.results);
+      //console.log(data.results);
       setFilteredMovies(data.results || []);
     } catch (error) {
       console.log("Ran into an error: ", error);
@@ -94,9 +80,19 @@ function App() {
   // Handler for search inputs
   const searchMoviesHandler = (event) => {
     event.preventDefault();
-    // const search = event.target[0].value.toLowerCase();
-    // setSearchInput(search);
     searchMovies();
+  };
+
+  const sortMoviesByAlphabetical = () => {
+    const sortedMovies = [...movies];
+
+    if (sortAscending) {
+      sortedMovies.sort((curr, next) => curr.title.localeCompare(next.title));
+    } else {
+      sortedMovies.sort((curr, next) => next.title.localeCompare(curr.title));
+    }
+
+    setMovies(sortedMovies);
   };
 
   // Sort the movies by the ratings
@@ -105,17 +101,16 @@ function App() {
 
     if (sortAscending) {
       setMovies(
-        sortedMovies.sort((curr, next) => curr.vote_average - next.vote_average)
+        sortedMovies.sort((curr, next) => next.vote_average - curr.vote_average)
       );
     } else {
       setMovies(
-        sortedMovies.sort((curr, next) => next.vote_average - curr.vote_average)
+        sortedMovies.sort((curr, next) => curr.vote_average - next.vote_average)
       );
     }
 
     console.log("Sorted movies: ", sortedMovies);
-    //setFilteredMovies(filteredMovies);
-    setSortAscending(!sortAscending);
+    setMovies(sortedMovies);
   };
 
   // Sort the movies by the release date
@@ -125,56 +120,71 @@ function App() {
     if (sortAscending) {
       sortedMovies.sort(
         (curr, next) =>
-          new Date(curr.release_date) - new Date(next.release_date)
+          new Date(next.release_date) - new Date(curr.release_date)
       );
     } else {
       sortedMovies.sort(
         (curr, next) =>
-          new Date(next.release_date) - new Date(curr.release_date)
+          new Date(curr.release_date) - new Date(next.release_date)
       );
     }
 
     console.log("Release sorted: ", sortedMovies);
     setMovies(sortedMovies);
-    setFilteredMovies(sortedMovies);
-    setSortAscending(!sortAscending);
+  };
+
+  // User can favorite the movie
+  const toggleFavorite = (movieID) => {
+    if (favorites.includes(movieID)) {
+      setFavorites(favorites.filter((id) => id !== movieID));
+    } else {
+      setFavorites([...favorites, movieID]);
+    }
+  };
+
+  // User can mark it as a "watched" movie
+  const toggleWatched = (movieID) => {
+    if (watched.includes(movieID)) {
+      setWatched(watched.filter((id) => id !== movieID));
+    } else {
+      setWatched([...watched, movieID]);
+    }
   };
 
   return (
     <div className="App">
+      <div className="top-section">
+        <Header />
+        <Banner
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          searchMoviesHandler={searchMoviesHandler}
+          setFilteredMovies={setFilteredMovies}
+          sortMoviesByAlphabetical={sortMoviesByAlphabetical}
+          sortMoviesByRating={sortMoviesByRating}
+          sortMoviesByRelease={sortMoviesByRelease}
+        />
+      </div>
       {openModal && (
         <MovieModal
+          movie={movie}
           openModal={openModal}
           setOpenModal={setOpenModal}
-          movie={movie}
         />
       )}
-      <form onSubmit={searchMoviesHandler}>
-        <input
-          type="search"
-          placeholder="Search Movies"
-          value={searchInput}
-          onChange={(event) => setSearchInput(event.target.value)}
-        />
-        <button type="submit">Submit</button>
-        <button
-          type="button"
-          onClick={() => {
-            setSearchInput("");
-            setFilteredMovies(null);
-          }}>
-          Clear
-        </button>
-        <button onClick={sortMoviesByRating}>Sort By Rating</button>
-        <button onClick={sortMoviesByRelease}>Sort By Release Date</button>
-      </form>
+
       <MovieList
         movies={filteredMovies ? filteredMovies : movies}
         openModal={openModal}
         setOpenModal={setOpenModal}
         setMovie={setMovie}
+        favorites={favorites}
+        toggleFavorite={toggleFavorite}
+        watched={watched}
+        toggleWatched={toggleWatched}
       />
       <button onClick={loadMore}>Load More</button>
+      <Footer />
     </div>
   );
 }

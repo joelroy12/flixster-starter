@@ -1,9 +1,35 @@
 import "../Components/Card.css";
 import "./MovieCard.css";
 
-function MovieCard({ movie, openModal, setOpenModal, setMovie }) {
-  const { title, poster_path, vote_average } = movie;
-//   console.log(movie);
+function MovieCard({
+  movie,
+  openModal,
+  setOpenModal,
+  setMovie,
+  favorites,
+  toggleFavorite,
+  watched,
+  toggleWatched,
+}) {
+  const { title, poster_path, vote_average, id } = movie;
+
+  // Heart function
+  let heartClass = "blank-heart";
+  let heartIcon = "🤍";
+
+  if (favorites.includes(id)) {
+    heartClass = "red-heart";
+    heartIcon = "❤️";
+  }
+
+  // Watched function
+  let watching = "eye-button";
+  let eyes = "👀";
+
+  if (watched.includes(id)) {
+    watching = "sunglasses-button";
+    eyes = "😎";
+  }
   return (
     <div
       className="movie-card"
@@ -14,8 +40,26 @@ function MovieCard({ movie, openModal, setOpenModal, setMovie }) {
       <img
         className="poster"
         src={`https://image.tmdb.org/t/p/original/${poster_path}`}></img>
-      <h2>{title}</h2>
-      <p>{vote_average.toFixed(2)}/10</p>
+      <h2 className="title">{title}</h2>
+      <p className="rating-text">Rating: {vote_average.toFixed(2)}/10</p>
+      <div>
+        <button
+          className={heartClass}
+          onClick={(event) => {
+            event.stopPropagation();
+            toggleFavorite(id);
+          }}>
+          {heartIcon}
+        </button>
+        <button
+          className={watching}
+          onClick={(event) => {
+            event.stopPropagation();
+            toggleWatched(id);
+          }}>
+          {eyes}
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-color: #121212;
+  max-width: 100vw;
 }
 
 .App-header {
@@ -10,19 +12,18 @@
   justify-content: space-evenly;
   color: white;
   padding: 20px;
+  width: 100%;
+}
+
+.top-section {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: black;
 }
 
 @media (max-width: 600px) {
   .movie-card {
     width: 100%;
-  }
-
-  .search-bar {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .search-bar form {
-    flex-direction: column;
   }
 }

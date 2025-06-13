@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Honk&display=swap');
+
+.Footer {
+    background-color: #111;
+    color: #eee;
+    text-align: center;
+    font-size: 24px;
+    font-family: 'Honk', cursive;
+    user-select: none;
+}
+
+.Footer:hover {
+    color: #ff6f61;
+    cursor: default;
+    transition: color 0.3s ease;
+}
+
+.Footer h1 {
+    margin: 0;
+}
+
