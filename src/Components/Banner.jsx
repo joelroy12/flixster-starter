@@ -10,10 +10,17 @@ const Banner = ({
   sortMoviesByAlphabetical,
   sortMoviesByRating,
   sortMoviesByRelease,
+  toggleSidebar,
 }) => {
   return (
     <div className="Banner">
       <form className="top-banner" onSubmit={searchMoviesHandler}>
+        <button
+          type="button"
+          className="hamburg-button"
+          onClick={toggleSidebar}>
+          ☰
+        </button>
         <input
           type="search"
           placeholder="Search Movies"
@@ -51,9 +58,6 @@ const Banner = ({
             Sort By Release Date
           </option>
         </select>
-        <button type="button" className="sidebar">
-          Sidebar
-        </button>
       </form>
     </div>
   );

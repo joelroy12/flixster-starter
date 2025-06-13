@@ -1,0 +1,31 @@
+ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+li {
+    color: white;
+    margin: 40px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.side-bar {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    z-index: 1000;
+}
+
+.sidebar-modal {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: rgb(16, 13, 13);
+    width: 20vw;
+    height: 100vh;
+    transition: margin-left 0.3s ease-in-out;
+    justify-content: center;
+}

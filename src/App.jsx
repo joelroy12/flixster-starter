@@ -7,6 +7,7 @@ import MovieCard from "./Components/MovieCard";
 import Header from "./Components/Header";
 import Banner from "./Components/Banner";
 import Footer from "./Components/Footer";
+import Sidebar from "./Components/Sidebar";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -19,6 +20,8 @@ function App() {
   const [sortAscending, setSortAscending] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [watched, setWatched] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [currPage, setCurrPage] = useState("Home");
 
   // Fetch movies from API
   const fetchMovies = async () => {
@@ -86,48 +89,26 @@ function App() {
   const sortMoviesByAlphabetical = () => {
     const sortedMovies = [...movies];
 
-    if (sortAscending) {
-      sortedMovies.sort((curr, next) => curr.title.localeCompare(next.title));
-    } else {
-      sortedMovies.sort((curr, next) => next.title.localeCompare(curr.title));
-    }
-
-    setMovies(sortedMovies);
+    setMovies(
+      sortedMovies.sort((curr, next) => curr.title.localeCompare(next.title))
+    );
   };
 
   // Sort the movies by the ratings
   const sortMoviesByRating = () => {
     const sortedMovies = [...movies];
-
-    if (sortAscending) {
-      setMovies(
-        sortedMovies.sort((curr, next) => next.vote_average - curr.vote_average)
-      );
-    } else {
-      setMovies(
-        sortedMovies.sort((curr, next) => curr.vote_average - next.vote_average)
-      );
-    }
-
-    console.log("Sorted movies: ", sortedMovies);
-    setMovies(sortedMovies);
+    setMovies(
+      sortedMovies.sort((curr, next) => next.vote_average - curr.vote_average)
+    );
   };
 
   // Sort the movies by the release date
   const sortMoviesByRelease = () => {
     const sortedMovies = [...movies];
 
-    if (sortAscending) {
-      sortedMovies.sort(
-        (curr, next) =>
-          new Date(next.release_date) - new Date(curr.release_date)
-      );
-    } else {
-      sortedMovies.sort(
-        (curr, next) =>
-          new Date(curr.release_date) - new Date(next.release_date)
-      );
-    }
+    sortedMovies.sort(
+      (curr, next) => new Date(next.release_date) - new Date(curr.release_date)
+    );
 
     console.log("Release sorted: ", sortedMovies);
     setMovies(sortedMovies);
@@ -151,6 +132,19 @@ function App() {
     }
   };
 
+  let moviesShowing;
+  if (currPage === "Home") {
+    moviesShowing = filteredMovies || movies;
+  } else if (currPage === "Favorites") {
+    moviesShowing = movies.filter((movie) => favorites.includes(movie.id));
+  } else if (currPage === "Watched") {
+    moviesShowing = movies.filter((movie) => watched.includes(movie.id));
+  }
+
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
+
   return (
     <div className="App">
       <div className="top-section">
@@ -163,8 +157,16 @@ function App() {
           sortMoviesByAlphabetical={sortMoviesByAlphabetical}
           sortMoviesByRating={sortMoviesByRating}
           sortMoviesByRelease={sortMoviesByRelease}
+          toggleSidebar={toggleSidebar}
         />
       </div>
+
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        setPage={setCurrPage}
+      />
+
       {openModal && (
         <MovieModal
           movie={movie}
@@ -174,7 +176,7 @@ function App() {
       )}
 
       <MovieList
-        movies={filteredMovies ? filteredMovies : movies}
+        movies={moviesShowing}
         openModal={openModal}
         setOpenModal={setOpenModal}
         setMovie={setMovie}
@@ -183,7 +185,9 @@ function App() {
         watched={watched}
         toggleWatched={toggleWatched}
       />
-      <button onClick={loadMore}>Load More</button>
+      <button className="load-more" onClick={loadMore}>
+        Load More
+      </button>
       <Footer />
     </div>
   );
